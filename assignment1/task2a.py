@@ -32,7 +32,7 @@ def cross_entropy_loss(targets: np.ndarray, outputs: np.ndarray) -> float:
     assert targets.shape == outputs.shape,\
         f"Targets shape: {targets.shape}, outputs: {outputs.shape}"
     
-    return -np.mean(targets*np.log(outputs)+(1-targets)*np.log(1-outputs))
+    return -np.mean(targets*np.log(outputs)+(1-targets)*np.log(1-outputs))*100
 
 
 class BinaryModel:
@@ -52,7 +52,7 @@ class BinaryModel:
         """
         # TODO implement this function (Task 2a)
         print(self.w.shape, X.shape)
-        y = 1/(1+np.exp(-self.w.T * X))
+        y = 1/(1+np.exp(-X @ self.w))
         return y
 
     def backward(self, X: np.ndarray, outputs: np.ndarray, targets: np.ndarray) -> None:
@@ -70,8 +70,8 @@ class BinaryModel:
         assert self.grad.shape == self.w.shape,\
             f"Grad shape: {self.grad.shape}, w: {self.w.shape}"
         
-        self.grad = -(targets - outputs) @ X
-
+        self.grad = np.transpose(-(targets - outputs).T @ X)
+        
     def zero_grad(self) -> None:
         self.grad = None
 
