@@ -17,6 +17,7 @@ def calculate_accuracy(X: np.ndarray, targets: np.ndarray, model: BinaryModel) -
     """
     # TODO Implement this function (Task 2c)
     accuracy = 0.0
+    
     return accuracy
 
 
@@ -35,16 +36,17 @@ class LogisticTrainer(BaseTrainer):
             loss value (float) on batch
         """
         # TODO: Implement this function (task 2b)
-        loss = 0
         
-        self.w = np.zeros((785, 1))
+        # compute y_hat
         y_hat = self.model.forward(X_batch) 
         
-        #update model.grad
+        # update model.grad
         self.model.backward(X_batch, y_hat, Y_batch)
         
-        self.model.w = self.model.w - self.learning_rate*self.model.grad
+        # gradient descent
+        self.model.w = self.model.w - self.learning_rate * self.model.grad
         
+        # compute loss
         loss = cross_entropy_loss(Y_batch, y_hat)
         
         return loss
@@ -117,6 +119,7 @@ def main():
     plt.ylabel("Cross Entropy Loss - Average")
     plt.savefig("task2b_binary_train_loss.png")
     plt.show()
+    
 
     # Plot accuracy
     plt.ylim([0.93, .99])
