@@ -15,17 +15,23 @@ def cross_entropy_loss(targets: np.ndarray, outputs: np.ndarray):
     # TODO implement this function (Task 3a)
     assert targets.shape == outputs.shape,\
         f"Targets shape: {targets.shape}, outputs: {outputs.shape}"
-    raise NotImplementedError
+    
+    epsilon = 1e-15 
+    loss = - np.mean(np.sum(targets*np.log(outputs), 
+                            axis=1), 
+                     axis=0)
+    
+    return loss
 
 
 class SoftmaxModel:
 
     def __init__(self, l2_reg_lambda: float):
         # Define number of input nodes
-        self.I = None
+        self.I = 785
 
         # Define number of output nodes
-        self.num_outputs = None
+        self.num_outputs = 10
         self.w = np.zeros((self.I, self.num_outputs))
         self.grad = None
 
@@ -39,7 +45,12 @@ class SoftmaxModel:
             y: output of model with shape [batch size, num_outputs]
         """
         # TODO implement this function (Task 3a)
-        return None
+        
+        exp_z = np.exp(X @ self.w) 
+        normalize = np.sum(exp_z, axis=1)
+        y_hat = np.diag(1/normalize) @ exp_z
+        
+        return y_hat
 
     def backward(self, X: np.ndarray, outputs: np.ndarray, targets: np.ndarray) -> None:
         """
@@ -53,6 +64,9 @@ class SoftmaxModel:
         # TODO implement this function (Task 3a)
         # To implement L2 regularization task (4b) you can get the lambda value in self.l2_reg_lambda
         # which is defined in the constructor.
+        
+        self.grad = - X.T @ (targets - outputs)
+        
         assert targets.shape == outputs.shape,\
             f"Output shape: {outputs.shape}, targets: {targets.shape}"
         self.grad = np.zeros_like(self.w)
@@ -72,8 +86,11 @@ def one_hot_encode(Y: np.ndarray, num_classes: int):
         Y: shape [Num examples, num classes]
     """
     # TODO implement this function (Task 3a)
-    raise NotImplementedError
-
+    
+    Y_encoded = np.zeros((len(Y), num_classes))
+    for i in range(len(Y)):
+        Y_encoded[i][Y[i]] = 1
+    return Y_encoded
 
 def gradient_approximation_test(model: SoftmaxModel, X: np.ndarray, Y: np.ndarray):
     """
