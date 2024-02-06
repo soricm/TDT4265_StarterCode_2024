@@ -17,6 +17,10 @@ def calculate_accuracy(X: np.ndarray, targets: np.ndarray, model: BinaryModel) -
     """
     # TODO Implement this function (Task 2c)
     accuracy = 0.0
+    y_hat = model.forward(X)
+    y_hat_binary = (y_hat >= .5)
+    
+    accuracy = np.mean(targets == y_hat_binary)
     
     return accuracy
 
@@ -76,7 +80,8 @@ class LogisticTrainer(BaseTrainer):
 
 def main():
     # hyperparameters DO NOT CHANGE IF NOT SPECIFIED IN ASSIGNMENT TEXT
-    num_epochs = 50
+    #num_epochs = 50
+    num_epochs = 100 # Task 2_d
     learning_rate = 0.05
     batch_size = 128
     shuffle_dataset = False
