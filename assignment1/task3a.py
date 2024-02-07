@@ -16,11 +16,9 @@ def cross_entropy_loss(targets: np.ndarray, outputs: np.ndarray):
     assert targets.shape == outputs.shape,\
         f"Targets shape: {targets.shape}, outputs: {outputs.shape}"
     
-    epsilon = 1e-15 
-    loss = - np.mean(np.sum(targets*np.log(outputs), 
+    loss = - np.sum(np.sum(targets*np.log(outputs), 
                             axis=1), 
-                     axis=0)
-    
+                     axis=0)/targets.shape[0]
     return loss
 
 
@@ -65,13 +63,13 @@ class SoftmaxModel:
         # To implement L2 regularization task (4b) you can get the lambda value in self.l2_reg_lambda
         # which is defined in the constructor.
         
-        self.grad = - X.T @ (targets - outputs)
-        
         assert targets.shape == outputs.shape,\
             f"Output shape: {outputs.shape}, targets: {targets.shape}"
         self.grad = np.zeros_like(self.w)
         assert self.grad.shape == self.w.shape,\
             f"Grad shape: {self.grad.shape}, w: {self.w.shape}"
+        
+        self.grad = - X.T @ (targets - outputs)/X.shape[0] + 2*self.l2_reg_lambda*self.w 
 
     def zero_grad(self) -> None:
         self.grad = None
