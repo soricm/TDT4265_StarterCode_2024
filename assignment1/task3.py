@@ -39,6 +39,8 @@ class SoftmaxTrainer(BaseTrainer):
             loss value (float) on batch
         """
         # TODO: Implement this function (task 3b)
+        #self.model.w = np.zeros((self.model.I, self.model.num_outputs))
+        self.model.zero_grad()
         y_hat = self.model.forward(X_batch)
         self.model.backward(X_batch, y_hat, Y_batch)
         self.model.w = self.model.w - self.learning_rate * self.model.grad
@@ -70,7 +72,7 @@ class SoftmaxTrainer(BaseTrainer):
 
 def main():
     # hyperparameters DO NOT CHANGE IF NOT SPECIFIED IN ASSIGNMENT TEXT
-    num_epochs = 10
+    num_epochs = 10 #50
     learning_rate = 0.01
     batch_size = 128
     l2_reg_lambda = 0
@@ -133,7 +135,11 @@ def main():
     # You can finish the rest of task 4 below this point.
 
     # Plotting of softmax weights (Task 4b)
-    # plt.imsave("task4b_softmax_weight.png", weight, cmap="gray")
+    no_biais = model1.w[:-1]
+    images = [no_biais[:,i].reshape(28,28) for i in range(10)]
+    weight = [[images[j//28][i][j%28] for i in range(28)] for j in range(28*10)]
+    weight = np.array(weight).T
+    plt.imsave("task4b_softmax_weight.png", weight, cmap="gray")
 
     # Plotting of accuracy for difference values of lambdas (task 4c)
     l2_lambdas = [1, .1, .01, .001]

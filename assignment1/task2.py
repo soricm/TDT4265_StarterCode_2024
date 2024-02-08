@@ -41,6 +41,8 @@ class LogisticTrainer(BaseTrainer):
         """
         # TODO: Implement this function (task 2b)
         
+        #self.model.zero_grad()
+        
         # compute y_hat
         y_hat = self.model.forward(X_batch) 
         
