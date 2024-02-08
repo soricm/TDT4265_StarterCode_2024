@@ -33,7 +33,7 @@ def cross_entropy_loss(targets: np.ndarray, outputs: np.ndarray) -> float:
         f"Targets shape: {targets.shape}, outputs: {outputs.shape}"
     
     epsilon = 1e-15 
-    return -np.mean(targets*np.log(outputs+epsilon)+(1-targets)*np.log(1-outputs+epsilon))/100
+    return -np.mean(targets*np.log(outputs+epsilon)+(1-targets)*np.log(1-outputs+epsilon))
         
 
 
@@ -72,7 +72,7 @@ class BinaryModel:
         assert self.grad.shape == self.w.shape,\
             f"Grad shape: {self.grad.shape}, w: {self.w.shape}"
         
-        self.grad = np.transpose(-(targets - outputs).T @ X)
+        self.grad = np.transpose(-(targets - outputs).T @ X)/X.shape[0]
         
     def zero_grad(self) -> None:
         self.grad = None
