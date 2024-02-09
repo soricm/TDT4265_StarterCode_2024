@@ -1,4 +1,6 @@
 import numpy as np
+from tqdm import tqdm
+
 import utils
 
 
@@ -72,11 +74,18 @@ class BaseTrainer:
             accuracy={}
         )
 
+        stop_counter = 0
+        stop_flag = False
+        min_val_loss = float("Inf")
+        tmp_w = self.model.w
+
         global_step = 0
         for epoch in range(num_epochs):
+            print(f"Epoch {epoch + 1}/{num_epochs}")
             train_loader = utils.batch_loader(
                 self.X_train, self.Y_train, self.batch_size, shuffle=self.shuffle_dataset)
-            for X_batch, Y_batch in iter(train_loader):
+
+            for X_batch, Y_batch in tqdm(iter(train_loader)):
                 loss = self.train_step(X_batch, Y_batch)
                 # Track training loss continuously
                 train_history["loss"][global_step] = loss
@@ -90,7 +99,19 @@ class BaseTrainer:
 
                     # TODO (Task 2d): Implement early stopping here.
                     # You can access the validation loss in val_history["loss"]
-                    if (global_step % num_steps_per_val >= 10) and (val_history["loss"][global_step] >= val_history["loss"][global_step-1]):
-                        break
+                    # If val loss does not improve
+                    if val_loss >= min_val_loss:
+                        stop_counter += 1
+                        if stop_counter >= 10:
+                            print(f"Stopping early at epoch {epoch}, with val loss of {min_val_loss}")
+                            stop_flag = True
+                            break
+                    else:
+                        stop_counter = 0
+                        min_val_loss = val_loss
+                        tmp_w = self.model.w
                 global_step += 1
+            if stop_flag:
+                self.model.w = tmp_w
+                break
         return train_history, val_history
