@@ -14,7 +14,7 @@ def pre_process_images(X: np.ndarray):
         f"X.shape[1]: {X.shape[1]}, should be 784"
     # TODO implement this function (Task 2a)
     batch_size = X.shape[0]
-    minX, maxX = np.min(X), np.max(X)
+    minX, maxX = 0, 255
     X = (X - minX)*2/(maxX - minX) - 1
     X = np.hstack((X,np.ones((batch_size,1))))
     return X
@@ -32,7 +32,9 @@ def cross_entropy_loss(targets: np.ndarray, outputs: np.ndarray) -> float:
     assert targets.shape == outputs.shape,\
         f"Targets shape: {targets.shape}, outputs: {outputs.shape}"
     
-    return -np.mean(targets*np.log(outputs)+(1-targets)*np.log(1-outputs))*100
+    epsilon = 1e-15 
+    return -np.mean(targets*np.log(outputs+epsilon)+(1-targets)*np.log(1-outputs+epsilon))
+        
 
 
 class BinaryModel:
@@ -51,8 +53,8 @@ class BinaryModel:
             y: output of model with shape [batch size, 1]
         """
         # TODO implement this function (Task 2a)
-        print(self.w.shape, X.shape)
-        y = 1/(1+np.exp(-X @ self.w))
+        #y = 1/(1+np.exp(-X @ self.w))
+        y = 1/(1+np.exp(-np.matmul(X, self.w).astype(np.float128)))
         return y
 
     def backward(self, X: np.ndarray, outputs: np.ndarray, targets: np.ndarray) -> None:
@@ -70,7 +72,7 @@ class BinaryModel:
         assert self.grad.shape == self.w.shape,\
             f"Grad shape: {self.grad.shape}, w: {self.w.shape}"
         
-        self.grad = np.transpose(-(targets - outputs).T @ X)
+        self.grad = np.transpose(-(targets - outputs).T @ X)/X.shape[0]
         
     def zero_grad(self) -> None:
         self.grad = None
@@ -134,3 +136,16 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    
+    

@@ -17,7 +17,10 @@ def calculate_accuracy(X: np.ndarray, targets: np.ndarray, model: SoftmaxModel) 
         Accuracy (float)
     """
     # TODO: Implement this function (task 3c)
-    accuracy = 0
+    y_hat = model.forward(X)
+    y_hat_digit = np.argmax(y_hat, axis=1)
+    y_hat_binary = one_hot_encode(y_hat_digit, targets.shape[1])
+    accuracy = np.mean(np.sum(y_hat_binary == targets, axis=1) == 10)
     return accuracy
 
 
@@ -36,7 +39,12 @@ class SoftmaxTrainer(BaseTrainer):
             loss value (float) on batch
         """
         # TODO: Implement this function (task 3b)
-        loss = 0
+        #self.model.w = np.zeros((self.model.I, self.model.num_outputs))
+        self.model.zero_grad()
+        y_hat = self.model.forward(X_batch)
+        self.model.backward(X_batch, y_hat, Y_batch)
+        self.model.w = self.model.w - self.learning_rate * self.model.grad
+        loss = cross_entropy_loss(Y_batch, y_hat)
         return loss
 
     def validation_step(self):
@@ -64,7 +72,7 @@ class SoftmaxTrainer(BaseTrainer):
 
 def main():
     # hyperparameters DO NOT CHANGE IF NOT SPECIFIED IN ASSIGNMENT TEXT
-    num_epochs = 50
+    num_epochs = 10 #50
     learning_rate = 0.01
     batch_size = 128
     l2_reg_lambda = 0
@@ -117,6 +125,7 @@ def main():
 
     # Train a model with L2 regularization (task 4b)
 
+
     model1 = SoftmaxModel(l2_reg_lambda=1.0)
     trainer = SoftmaxTrainer(
         model1, learning_rate, batch_size, shuffle_dataset,
@@ -126,7 +135,11 @@ def main():
     # You can finish the rest of task 4 below this point.
 
     # Plotting of softmax weights (Task 4b)
-    # plt.imsave("task4b_softmax_weight.png", weight, cmap="gray")
+    no_biais = model1.w[:-1]
+    images = [no_biais[:,i].reshape(28,28) for i in range(10)]
+    weight = [[images[j//28][i][j%28] for i in range(28)] for j in range(28*10)]
+    weight = np.array(weight).T
+    plt.imsave("task4b_softmax_weight.png", weight, cmap="gray")
 
     # Plotting of accuracy for difference values of lambdas (task 4c)
     l2_lambdas = [1, .1, .01, .001]
@@ -135,7 +148,6 @@ def main():
     # Task 4d - Plotting of the l2 norm for each weight
 
     plt.savefig("task4d_l2_reg_norms.png")
-
 
 if __name__ == "__main__":
     main()
