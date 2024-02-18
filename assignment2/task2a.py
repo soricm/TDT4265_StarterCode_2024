@@ -14,6 +14,15 @@ def pre_process_images(X: np.ndarray):
     """
     assert X.shape[1] == 784, f"X.shape[1]: {X.shape[1]}, should be 784"
     # TODO implement this function (Task 2a)
+    
+    # standard normalization
+    X = (X - np.mean(X))/np.var(X)**.5
+    
+    # add bias
+    batch_size = X.shape[0]
+    X = np.hstack((X,np.ones((batch_size,1))))
+    
+    
     return X
 
 
@@ -29,7 +38,10 @@ def cross_entropy_loss(targets: np.ndarray, outputs: np.ndarray):
         targets.shape == outputs.shape
     ), f"Targets shape: {targets.shape}, outputs: {outputs.shape}"
     # TODO: Implement this function (copy from last assignment)
-    raise NotImplementedError
+    epsilon = 1e-15 
+    return -np.mean(targets*np.log(outputs+epsilon)+(1-targets)*np.log(1-outputs+epsilon))
+        
+
 
 
 class SoftmaxModel:
@@ -46,7 +58,7 @@ class SoftmaxModel:
             1
         )  # Always reset random seed before weight init to get comparable results.
         # Define number of input nodes
-        self.I = None
+        self.I = 785
         self.use_improved_sigmoid = use_improved_sigmoid
         self.use_relu = use_relu
         self.use_improved_weight_init = use_improved_weight_init
@@ -77,7 +89,15 @@ class SoftmaxModel:
         # TODO implement this function (Task 2b)
         # HINT: For performing the backward pass, you can save intermediate activations in variables in the forward pass.
         # such as self.hidden_layer_output = ...
-        return None
+        
+        #Implement a function that performs the forward pass through our softmax model. This should compute yˆ. Implement this in the function forward.
+        
+        self.hidden_layer_output = 1/(1 + np.exp(-X @ self.ws[0]))  #(b, 64)
+        
+        expz = np.exp(self.hidden_layer_output @ self.ws[1])
+        output = np.diag(1/np.sum(expz, axis=0)) @ expz
+        
+        return output
 
     def backward(self, X: np.ndarray, outputs: np.ndarray, targets: np.ndarray) -> None:
         """
@@ -95,6 +115,10 @@ class SoftmaxModel:
         # A list of gradients.
         # For example, self.grads[0] will be the gradient for the first hidden layer
         self.grads = []
+        
+        self.grads[0] = # δk aj
+        self.grads[1] = # −(yk − yˆk)xi -(targets - outputs)
+        
         for grad, w in zip(self.grads, self.ws):
             assert (
                 grad.shape == w.shape
@@ -113,7 +137,10 @@ def one_hot_encode(Y: np.ndarray, num_classes: int):
         Y: shape [Num examples, num classes]
     """
     # TODO: Implement this function (copy from last assignment)
-    raise NotImplementedError
+    Y_encoded = np.zeros((len(Y), num_classes))
+    for i in range(len(Y)):
+        Y_encoded[i][Y[i]] = 1
+    return Y_encoded
 
 
 def gradient_approximation_test(model: SoftmaxModel, X: np.ndarray, Y: np.ndarray):
