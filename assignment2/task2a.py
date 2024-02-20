@@ -77,7 +77,7 @@ class SoftmaxModel:
             w = np.zeros(w_shape)
             self.ws.append(w)
             prev = size
-        self.grads = [None for i in range(len(self.ws))]
+        self.grads = [None for i in range(len(self.ws))] # shapes (785,64), (64,10)
 
     def forward(self, X: np.ndarray) -> np.ndarray:
         """
@@ -115,9 +115,10 @@ class SoftmaxModel:
         # A list of gradients.
         # For example, self.grads[0] will be the gradient for the first hidden layer
         self.grads = []
+        sigmoid_diff = lambda x : -np.exp(-x)/(1+np.exp(-x))**2
         
-        self.grads[0] = # δk aj
-        self.grads[1] = # −(yk − yˆk)xi -(targets - outputs)
+        self.grads[0] = X.T @ -sigmoid_diff(X @ self.ws[0]) @ np.sum(self.ws[1] @ (targets - outputs)) # (785, b)
+        self.grads[1] = -self.hidden_layer_output.T @ (targets - outputs)  #(64,b)(b,10) 
         
         for grad, w in zip(self.grads, self.ws):
             assert (
