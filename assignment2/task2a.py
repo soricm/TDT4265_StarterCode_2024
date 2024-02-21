@@ -41,6 +41,11 @@ def cross_entropy_loss(targets: np.ndarray, outputs: np.ndarray):
     epsilon = 1e-15 
     return -np.mean(targets*np.log(outputs+epsilon)+(1-targets)*np.log(1-outputs+epsilon))
         
+def sigmoid():
+    pass
+
+def softmax():
+    pass
 
 
 
@@ -95,7 +100,7 @@ class SoftmaxModel:
         self.hidden_layer_output = 1/(1 + np.exp(-X @ self.ws[0]))  #(b, 64)
         
         expz = np.exp(self.hidden_layer_output @ self.ws[1])
-        output = np.diag(1/np.sum(expz, axis=0)) @ expz
+        output = np.diag(1/np.sum(expz, axis=1)) @ expz
         
         return output
 
@@ -115,10 +120,13 @@ class SoftmaxModel:
         # A list of gradients.
         # For example, self.grads[0] will be the gradient for the first hidden layer
         self.grads = []
-        sigmoid_diff = lambda x : -np.exp(-x)/(1+np.exp(-x))**2
+        sigmoid_diff = lambda x : np.exp(-x)/(1+np.exp(-x))**2
         
-        self.grads[0] = X.T @ -sigmoid_diff(X @ self.ws[0]) @ np.sum(self.ws[1] @ (targets - outputs)) # (785, b)
-        self.grads[1] = -self.hidden_layer_output.T @ (targets - outputs)  #(64,b)(b,10) 
+        #self.grads[1] = - sigmoid_diff(X @ self.ws[0]).T * (self.ws[1] @ (targets - outputs).T)
+        
+        self.grads[1] = - sigmoid_diff(X @ self.ws[0]).T @ (targets - outputs) * self.ws[1]
+        
+        self.grads[0] = -self.hidden_layer_output.T @ (targets - outputs)  #(64,b)(b,10) 
         
         for grad, w in zip(self.grads, self.ws):
             assert (

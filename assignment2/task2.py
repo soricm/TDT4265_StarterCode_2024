@@ -20,6 +20,11 @@ def calculate_accuracy(
     """
     # TODO: Implement this function (copy from last assignment)
     accuracy = 0
+    y_hat = model.forward(X)
+    y_hat_binary = (y_hat >= .5)
+    
+    accuracy = np.mean(targets == y_hat_binary)
+    
     return accuracy
 
 
@@ -52,6 +57,7 @@ class SoftmaxTrainer(BaseTrainer):
             loss value (float) on batch
         """
         # TODO: Implement this function (task 2c)
+        self.ws = [np.random.uniform(-1, 1, (785, 64)), np.random.uniform(-1, 1, (64, 10))]
 
         loss = 0
 
