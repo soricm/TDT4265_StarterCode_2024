@@ -57,13 +57,19 @@ class SoftmaxTrainer(BaseTrainer):
             loss value (float) on batch
         """
         # TODO: Implement this function (task 2c)
-        self.ws = [np.random.uniform(-1, 1, (785, 64)), np.random.uniform(-1, 1, (64, 10))]
-
+        
         loss = 0
-
-            self.model.ws[layer_idx] = (
-                self.model.ws[layer_idx] - self.learning_rate * grad
-        loss=cross_entropy_loss(Y_batch, logits)  # sol
+        
+#        self.model.ws = [np.random.uniform(-1, 1, (785, 64)), 
+ #                        np.random.uniform(-1, 1, (64, 10))]
+    
+        self.model.ws = [np.random.uniform(-1, 1, w.shape)
+                         for w in self.model.ws]
+        
+        Y_hat = self.model.forward(X_batch)
+        self.model.backward(X_batch, Y_hat, Y_batch)
+        loss = cross_entropy_loss(Y_batch, Y_hat)
+        
 
         return loss
 
@@ -91,7 +97,7 @@ class SoftmaxTrainer(BaseTrainer):
 
 def main():
     # hyperparameters DO NOT CHANGE IF NOT SPECIFIED IN ASSIGNMENT TEXT
-    num_epochs=50
+    num_epochs=1
     learning_rate=0.1
     batch_size=32
     neurons_per_layer=[64, 10]
