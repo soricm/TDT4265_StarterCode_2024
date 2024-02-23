@@ -59,16 +59,19 @@ class SoftmaxTrainer(BaseTrainer):
         # TODO: Implement this function (task 2c)
         
         loss = 0
-        
-#        self.model.ws = [np.random.uniform(-1, 1, (785, 64)), 
- #                        np.random.uniform(-1, 1, (64, 10))]
     
         self.model.ws = [np.random.uniform(-1, 1, w.shape)
                          for w in self.model.ws]
         
         Y_hat = self.model.forward(X_batch)
         self.model.backward(X_batch, Y_hat, Y_batch)
+        for i in range(len(self.model.ws)):
+            if self.use_momentum:
+                self.model.ws[i] -= self.model.grads[i] + self.momentum_gamma*self.previous_grads[i]
+            else:
+                self.model.ws[i] -= self.learning_rate * self.model.grads[i]
         loss = cross_entropy_loss(Y_batch, Y_hat)
+        self.previous_grads = self.model.grads
         
 
         return loss
