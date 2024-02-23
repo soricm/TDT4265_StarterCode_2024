@@ -76,6 +76,7 @@ def main():
     plt.legend()
     plt.savefig(f"task3c_train_loss_use_improved_sigmoid.png")
     plt.show()
+    print(f"")
        #############
         
     shuffle_data = True
