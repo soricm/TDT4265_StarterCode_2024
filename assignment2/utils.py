@@ -26,8 +26,9 @@ def batch_loader(
     indices = list(range(len(X)))
 
     # TODO (copy from last assignment) implement dataset shuffling here.
-    p = np.random.permutation(len(X))
-    X, Y = X[p], Y[p]
+    if shuffle:
+        p = np.random.permutation(len(X))
+        X, Y = X[p], Y[p]
     
     for i in range(num_batches):
         # select a set of indices for each batch of samples
