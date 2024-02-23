@@ -1,4 +1,6 @@
 import numpy as np
+from tqdm import tqdm
+
 import utils
 
 
@@ -72,8 +74,12 @@ class BaseTrainer:
             accuracy={}
         )
 
+        stop_counter = 0
+        stop_flag = False
+        min_val_loss = float("Inf")
+        tmp_ws = self.model.ws
         global_step = 0
-        for epoch in range(num_epochs):
+        for epoch in tqdm(range(num_epochs)):
             train_loader = utils.batch_loader(
                 self.X_train, self.Y_train, self.batch_size, shuffle=self.shuffle_dataset)
             for X_batch, Y_batch in iter(train_loader):
@@ -87,6 +93,20 @@ class BaseTrainer:
                     train_history["accuracy"][global_step] = accuracy_train
                     val_history["loss"][global_step] = val_loss
                     val_history["accuracy"][global_step] = accuracy_val
+
                     # TODO: Implement early stopping (copy from last assignment)
+                    if val_loss >= min_val_loss:
+                        stop_counter += 1
+                        if stop_counter >= 10:
+                            print(f"Stopping early at epoch {epoch}, with val loss of {min_val_loss}")
+                            stop_flag = True
+                            break
+                    else:
+                        stop_counter = 0
+                        min_val_loss = val_loss
+                        tmp_ws = self.model.ws
+                if stop_flag:
+                    self.model.ws = tmp_ws
+                    break
                 global_step += 1
         return train_history, val_history

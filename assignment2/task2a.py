@@ -38,9 +38,11 @@ def cross_entropy_loss(targets: np.ndarray, outputs: np.ndarray):
         targets.shape == outputs.shape
     ), f"Targets shape: {targets.shape}, outputs: {outputs.shape}"
     # TODO: Implement this function (copy from last assignment)
-    loss = - np.mean(np.sum(targets*np.log(outputs), axis=1), axis=0)
-    return loss
-        
+    # wrong loss
+    # loss = - np.mean(np.sum(targets*np.log(outputs), axis=1), axis=0)
+    # return loss
+    epsilon = 1e-15
+    return -np.mean(targets * np.log(outputs + epsilon) + (1 - targets) * np.log(1 - outputs + epsilon))
     
 def activation_function(x: np.ndarray, use_improved_sigmoid: np.bool_):
     if use_improved_sigmoid:
