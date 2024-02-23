@@ -99,7 +99,7 @@ class BaseTrainer:
                     if val_loss >= min_val_loss:
                         stop_counter += 1
                         if stop_counter >= validation_steps_limit:
-                            print(f"Stopping early at epoch {epoch}, with val loss of {min_val_loss}")
+                            print(f"\n\nStopping early at epoch {epoch}, with val loss of {min_val_loss}")
                             stop_flag = True
                             break
                     else:

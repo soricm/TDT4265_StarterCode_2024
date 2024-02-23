@@ -87,9 +87,6 @@ def main():
 
     # ANY PARTS OF THE CODE BELOW THIS CAN BE CHANGED.
 
-
-    
-
     # Intialize model
     model = SoftmaxModel(l2_reg_lambda)
     # Train model

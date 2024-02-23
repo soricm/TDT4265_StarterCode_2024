@@ -124,7 +124,7 @@ def main():
     model=SoftmaxModel(
         neurons_per_layer, use_improved_sigmoid, use_improved_weight_init, use_relu
     )
-    trainer=SoftmaxTrainer(
+    trainer = SoftmaxTrainer(
         momentum_gamma,
         use_momentum,
         model,
