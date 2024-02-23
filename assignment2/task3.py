@@ -26,19 +26,14 @@ def main():
     Y_val = one_hot_encode(Y_val, 10)
 
     model = SoftmaxModel(
-        neurons_per_layer, use_improved_sigmoid, use_improved_weight_init, use_relu
-    )
+        neurons_per_layer,
+        use_improved_sigmoid,
+        use_improved_weight_init,
+        use_relu)
     trainer = SoftmaxTrainer(
-        momentum_gamma,
-        use_momentum,
-        model,
-        learning_rate,
-        batch_size,
-        shuffle_data,
-        X_train,
-        Y_train,
-        X_val,
-        Y_val,
+        momentum_gamma, use_momentum,
+        model, learning_rate, batch_size, shuffle_data,
+        X_train, Y_train, X_val, Y_val,
     )
     train_history, val_history = trainer.train(num_epochs)
 
@@ -50,40 +45,33 @@ def main():
 
     # Train a new model with new parameters
     model_no_shuffle = SoftmaxModel(
-        neurons_per_layer, use_improved_sigmoid, use_improved_weight_init, use_relu
-    )
+        neurons_per_layer,
+        use_improved_sigmoid,
+        use_improved_weight_init,
+        use_relu)
     trainer_shuffle = SoftmaxTrainer(
-        momentum_gamma,
-        use_momentum,
-        model_no_shuffle,
-        learning_rate,
-        batch_size,
-        shuffle_data,
-        X_train,
-        Y_train,
-        X_val,
-        Y_val,
+        momentum_gamma, use_momentum,
+        model_no_shuffle, learning_rate, batch_size, shuffle_data,
+        X_train, Y_train, X_val, Y_val,
     )
-    train_history_no_shuffle, val_history_no_shuffle = trainer_shuffle.train(num_epochs)
+    train_history_no_shuffle, val_history_no_shuffle = trainer_shuffle.train(
+        num_epochs)
 
     plt.subplot(1, 2, 1)
-    utils.plot_loss(train_history["loss"], "Task 2 Model", npoints_to_average=10)
+    utils.plot_loss(train_history["loss"],
+                    "Task 2 Model", npoints_to_average=10)
     utils.plot_loss(
-        train_history_no_shuffle["loss"],
-        "Task 2 Model - No dataset shuffling",
-        npoints_to_average=10,
-    )
-    plt.ylim([0, 0.4])
+        train_history_no_shuffle["loss"], "Task 2 Model - No dataset shuffling", npoints_to_average=10)
+    plt.ylim([0, .4])
     plt.subplot(1, 2, 2)
-    plt.ylim([0.85, 0.95])
+    plt.ylim([0.85, .95])
     utils.plot_loss(val_history["accuracy"], "Task 2 Model")
     utils.plot_loss(
-        val_history_no_shuffle["accuracy"], "Task 2 Model - No Dataset Shuffling"
-    )
+        val_history_no_shuffle["accuracy"], "Task 2 Model - No Dataset Shuffling")
     plt.ylabel("Validation Accuracy")
     plt.legend()
     plt.show()
-
+       
 
 if __name__ == "__main__":
     main()
