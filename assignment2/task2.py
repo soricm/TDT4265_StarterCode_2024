@@ -1,3 +1,5 @@
+import random
+
 import numpy as np
 import utils
 import matplotlib.pyplot as plt
@@ -167,7 +169,7 @@ def main():
     plt.xlabel("Number of Training Steps")
     plt.ylabel("Accuracy")
     plt.legend()
-    plt.savefig("task2c_train_loss.png")
+    plt.savefig(f"task2c_train_loss_{random.randint(0, 1000000)}.png")
     plt.show()
 
 

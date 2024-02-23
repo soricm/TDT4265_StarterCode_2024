@@ -74,6 +74,7 @@ class BaseTrainer:
             accuracy={}
         )
 
+        validation_steps_limit = 50
         stop_counter = 0
         stop_flag = False
         min_val_loss = float("Inf")
@@ -97,7 +98,7 @@ class BaseTrainer:
                     # TODO: Implement early stopping (copy from last assignment)
                     if val_loss >= min_val_loss:
                         stop_counter += 1
-                        if stop_counter >= 10:
+                        if stop_counter >= validation_steps_limit:
                             print(f"Stopping early at epoch {epoch}, with val loss of {min_val_loss}")
                             stop_flag = True
                             break
@@ -105,8 +106,9 @@ class BaseTrainer:
                         stop_counter = 0
                         min_val_loss = val_loss
                         tmp_ws = self.model.ws
-                if stop_flag:
-                    self.model.ws = tmp_ws
-                    break
                 global_step += 1
+
+            if stop_flag:
+                self.model.ws = tmp_ws
+                break
         return train_history, val_history
