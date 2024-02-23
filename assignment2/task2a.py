@@ -102,6 +102,10 @@ class SoftmaxModel:
             self.ws.append(w)
             prev = size
         self.grads = [None for i in range(len(self.ws))] # shapes (785,64), (64,10)
+
+        # initialize weights
+        for layer_idx, w in enumerate(self.ws):
+            self.ws[layer_idx] = np.random.uniform(-1, 1, size=w.shape)
        
     def forward(self, X: np.ndarray) -> np.ndarray:
         """

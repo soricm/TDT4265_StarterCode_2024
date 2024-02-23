@@ -1,4 +1,4 @@
-import random
+from datetime import datetime
 
 import numpy as np
 import utils
@@ -167,7 +167,7 @@ def main():
     plt.xlabel("Number of Training Steps")
     plt.ylabel("Accuracy")
     plt.legend()
-    plt.savefig(f"task2c_train_loss_{random.randint(0, 1000000)}.png")
+    plt.savefig(f"task2c_train_loss_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.png")
     plt.show()
 
 
