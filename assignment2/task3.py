@@ -6,7 +6,7 @@ from task2 import SoftmaxTrainer
 
 def main():
     # hyperparameters DO NOT CHANGE IF NOT SPECIFIED IN ASSIGNMENT TEXT
-    num_epochs = 50
+    num_epochs = 5
     learning_rate = .1
     batch_size = 32
     neurons_per_layer = [64, 10]

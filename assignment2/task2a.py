@@ -41,21 +41,22 @@ def cross_entropy_loss(targets: np.ndarray, outputs: np.ndarray):
     loss = - np.mean(np.sum(targets*np.log(outputs), axis=1), axis=0)
     return loss
         
-def  activation_function(x: np.ndarray, use_improved_sigmoid: np.bool_):
+    
+def activation_function(x: np.ndarray, use_improved_sigmoid: np.bool_):
     if use_improved_sigmoid:
         return 1.7159*np.tanh(2*x/3)
     else:
         return 1/(1 + np.exp(-x))
 
-def  diff_activation_function(x, use_improved_sigmoid: np.bool_):
+def diff_activation_function(x, use_improved_sigmoid: np.bool_):
     if use_improved_sigmoid:
         return 1.7159*2/3*(1-np.tanh(2*x/3)**2)
     else:
         return np.exp(-x)/(1+np.exp(-x))**2
 
-def softmax():
-    pass
-
+def softmax(x: np.ndarray):
+    exp_x = np.exp(x)
+    return np.diag(1/np.sum(exp_x, axis=1)) @ exp_x
 
 
 class SoftmaxModel:
@@ -115,8 +116,7 @@ class SoftmaxModel:
         self.hidden_layer_output = activation_function(X @ self.ws[0],
                                                       self.use_improved_sigmoid)  #(b, 64)
         
-        expz = np.exp(self.hidden_layer_output @ self.ws[1])
-        output = np.diag(1/np.sum(expz, axis=1)) @ expz
+        output = softmax(self.hidden_layer_output @ self.ws[1])
         
         return output
 
