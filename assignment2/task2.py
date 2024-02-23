@@ -21,12 +21,10 @@ def calculate_accuracy(
         Accuracy (float)
     """
     # TODO: Implement this function (copy from last assignment)
-    accuracy = 0
+    
     y_hat = model.forward(X)
     y_hat_binary = (y_hat >= .5)
-    
     accuracy = np.mean(targets == y_hat_binary)
-    
     return accuracy
 
 
@@ -62,8 +60,8 @@ class SoftmaxTrainer(BaseTrainer):
         
         loss = 0
     
-        self.model.ws = [np.random.uniform(-1, 1, w.shape)
-                         for w in self.model.ws]
+        #self.model.ws = [np.random.uniform(-1, 1, w.shape)
+        #                 for w in self.model.ws]
         
         Y_hat = self.model.forward(X_batch)
         self.model.backward(X_batch, Y_hat, Y_batch)
@@ -102,7 +100,7 @@ class SoftmaxTrainer(BaseTrainer):
 
 def main():
     # hyperparameters DO NOT CHANGE IF NOT SPECIFIED IN ASSIGNMENT TEXT
-    num_epochs = 50
+    num_epochs = 5
     learning_rate = 0.1
     batch_size = 32
     neurons_per_layer = [64, 10]

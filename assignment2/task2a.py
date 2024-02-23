@@ -22,7 +22,6 @@ def pre_process_images(X: np.ndarray):
     batch_size = X.shape[0]
     X = np.hstack((X,np.ones((batch_size,1))))
     
-    
     return X
 
 
@@ -38,25 +37,27 @@ def cross_entropy_loss(targets: np.ndarray, outputs: np.ndarray):
         targets.shape == outputs.shape
     ), f"Targets shape: {targets.shape}, outputs: {outputs.shape}"
     # TODO: Implement this function (copy from last assignment)
-    # wrong loss
-    # loss = - np.mean(np.sum(targets*np.log(outputs), axis=1), axis=0)
-    # return loss
-    epsilon = 1e-15
-    return -np.mean(targets * np.log(outputs + epsilon) + (1 - targets) * np.log(1 - outputs + epsilon))
+    loss = - np.mean(np.sum(targets*np.log(outputs+1e-15), axis=1), axis=0)/len(targets)
+    return loss
+
+
     
 def activation_function(x: np.ndarray, use_improved_sigmoid: np.bool_):
+    """ Sigmoid function or improved sigmoid as activation function."""
     if use_improved_sigmoid:
         return 1.7159*np.tanh(2*x/3)
     else:
         return 1/(1 + np.exp(-x))
 
 def diff_activation_function(x, use_improved_sigmoid: np.bool_):
+    """Differentiation of the activation function"""
     if use_improved_sigmoid:
         return 1.7159*2/3*(1-np.tanh(2*x/3)**2)
     else:
         return np.exp(-x)/(1+np.exp(-x))**2
 
 def softmax(x: np.ndarray):
+    """Softmax for matrices"""
     exp_x = np.exp(x)
     return np.diag(1/np.sum(exp_x, axis=1)) @ exp_x
 
@@ -115,12 +116,14 @@ class SoftmaxModel:
         
         #Implement a function that performs the forward pass through our softmax model. This should compute yˆ. Implement this in the function forward.
         
+        # Input into hiden layer
         self.hidden_layer_output = activation_function(X @ self.ws[0],
                                                       self.use_improved_sigmoid)  #(b, 64)
         
-        output = softmax(self.hidden_layer_output @ self.ws[1])
+        # Hiden layer into output
+        y = softmax(self.hidden_layer_output @ self.ws[1])
         
-        return output
+        return y
 
     def backward(self, X: np.ndarray, outputs: np.ndarray, targets: np.ndarray) -> None:
         """
@@ -137,7 +140,7 @@ class SoftmaxModel:
         ), f"Output shape: {outputs.shape}, targets: {targets.shape}"
         # A list of gradients.
         # For example, self.grads[0] will be the gradient for the first hidden layer
-        #self.grads = []
+        
         self.zero_grad()
         self.grads[0] = - X.T @ (diff_activation_function(X @ self.ws[0], self.use_improved_sigmoid) * ((targets - outputs) @ self.ws[1].T)) / X.shape[0] # (785, 64)
         

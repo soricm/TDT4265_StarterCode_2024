@@ -6,14 +6,14 @@ from task2 import SoftmaxTrainer
 
 def main():
     # hyperparameters DO NOT CHANGE IF NOT SPECIFIED IN ASSIGNMENT TEXT
-    num_epochs = 50
+    num_epochs = 5
     learning_rate = 0.1
     batch_size = 32
     neurons_per_layer = [64, 10]
     momentum_gamma = 0.9  # Task 3 hyperparameter
     shuffle_data = True
 
-    use_improved_sigmoid = False
+    use_improved_sigmoid = True
     use_improved_weight_init = False
     use_momentum = False
     use_relu = False
