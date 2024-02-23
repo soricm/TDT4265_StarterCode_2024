@@ -37,7 +37,8 @@ def cross_entropy_loss(targets: np.ndarray, outputs: np.ndarray):
         targets.shape == outputs.shape
     ), f"Targets shape: {targets.shape}, outputs: {outputs.shape}"
     # TODO: Implement this function (copy from last assignment)
-    loss = -np.sum(targets*np.log(outputs))/targets.shape[0] #- np.mean(np.sum(targets*np.log(outputs+1e-15), axis=1), axis=0)#/len(targets)
+    loss = -np.sum(targets*np.log(outputs))/targets.shape[0]
+    #loss = - np.mean(np.sum(targets*np.log(outputs+1e-15), axis=1), axis=0)#/len(targets)
     return loss
 
 
