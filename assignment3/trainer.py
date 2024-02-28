@@ -32,6 +32,8 @@ def compute_loss_and_accuracy(
             output_probs = model(X_batch)
 
             # Compute Loss and Accuracy
+            average_loss = - 
+            accuracy = 
 
             # Predicted class is the max index over the column dimension
     return average_loss, accuracy
