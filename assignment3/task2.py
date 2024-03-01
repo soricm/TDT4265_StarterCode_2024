@@ -17,6 +17,8 @@ class ExampleModel(nn.Module):
         super().__init__()
         # TODO: Implement this function (Task  2a)
         num_filters = 32  # Set number of filters in first conv layer
+        num_filters_2 = 64  # Set number of filters in second conv layer
+        num_filters_3 = 128  # Set number of filters in third conv layer
         self.num_classes = num_classes
         # Define the convolutional layers
         self.feature_extractor = nn.Sequential(
@@ -26,7 +28,53 @@ class ExampleModel(nn.Module):
                 kernel_size=5,
                 stride=1,
                 padding=2,
+            ),
+            nn.ReLu(),
+            nn.MaxPool2d(
+                kernel_size=(2,2), 
+                stride=2, 
+                padding=0,
+            ),
+            nn.Conv2d(
+                in_channels=image_channels*num_filters,
+                out_channels=num_filters_2,
+                kernel_size=5,
+                stride=1,
+                padding=2,
+            ),
+            nn.ReLu(),
+            nn.MaxPool2d(
+                kernel_size=(2,2), 
+                stride=2, 
+                padding=0,
+            ),
+            nn.Conv2d(
+                in_channels=image_channels*num_filters_2,
+                out_channels=num_filters_3,
+                kernel_size=5,
+                stride=1,
+                padding=2,
+            ),
+            nn.ReLu(),
+            nn.MaxPool2d(
+                kernel_size=(2,2), 
+                stride=2, 
+                padding=0,
+            ),
+            nn.Flatten(),
+            nn.Linear(
+                in_features=, 
+                out_features=64, 
+                bias=True,
             )
+            nn.ReLu(),
+            nn.Linear(
+                in_features=64, 
+                out_features=num_classes, 
+                bias=True,
+            )
+            nn.Softmax()
+            
         )
         # The output of feature_extractor will be [batch_size, num_filters, 16, 16]
         self.num_output_features = 32 * 32 * 32
