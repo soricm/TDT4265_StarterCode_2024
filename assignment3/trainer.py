@@ -32,8 +32,9 @@ def compute_loss_and_accuracy(
             output_probs = model(X_batch)
 
             # Compute Loss and Accuracy
-            average_loss = L1Loss(loss_criterion).(output_probs, Y_batch)
-            accuracy = 
+            average_loss = loss_criterion(output_probs, Y_batch)
+            accuracy = np.sum(np.argmax(output_probs, axis=0) == Y_batch,
+                              axis=0)
 
             # Predicted class is the max index over the column dimension
     return average_loss, accuracy

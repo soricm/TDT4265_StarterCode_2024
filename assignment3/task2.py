@@ -19,6 +19,7 @@ class ExampleModel(nn.Module):
         num_filters = 32  # Set number of filters in first conv layer
         num_filters_2 = 64  # Set number of filters in second conv layer
         num_filters_3 = 128  # Set number of filters in third conv layer
+        num_hidden_unit = 64
         self.num_classes = num_classes
         # Define the convolutional layers
         self.feature_extractor = nn.Sequential(
@@ -29,33 +30,33 @@ class ExampleModel(nn.Module):
                 stride=1,
                 padding=2,
             ),
-            nn.ReLu(),
+            nn.ReLU(),
             nn.MaxPool2d(
                 kernel_size=(2,2), 
                 stride=2, 
                 padding=0,
             ),
             nn.Conv2d(
-                in_channels=image_channels*num_filters,
+                in_channels=num_filters,
                 out_channels=num_filters_2,
                 kernel_size=5,
                 stride=1,
                 padding=2,
             ),
-            nn.ReLu(),
+            nn.ReLU(),
             nn.MaxPool2d(
                 kernel_size=(2,2), 
                 stride=2, 
                 padding=0,
             ),
             nn.Conv2d(
-                in_channels=image_channels*num_filters_2,
+                in_channels=num_filters_2,
                 out_channels=num_filters_3,
                 kernel_size=5,
                 stride=1,
                 padding=2,
             ),
-            nn.ReLu(),
+            nn.ReLU(),
             nn.MaxPool2d(
                 kernel_size=(2,2), 
                 stride=2, 
@@ -63,18 +64,11 @@ class ExampleModel(nn.Module):
             ),
             nn.Flatten(),
             nn.Linear(
-                in_features=, 
-                out_features=64, 
+                in_features=(4**2)*num_filters_3, 
+                out_features=num_hidden_unit, 
                 bias=True,
-            )
-            nn.ReLu(),
-            nn.Linear(
-                in_features=64, 
-                out_features=num_classes, 
-                bias=True,
-            )
-            nn.Softmax()
-            
+            ),
+            nn.ReLU(),
         )
         # The output of feature_extractor will be [batch_size, num_filters, 16, 16]
         self.num_output_features = 32 * 32 * 32
@@ -84,8 +78,16 @@ class ExampleModel(nn.Module):
         # There is no need for softmax activation function, as this is
         # included with nn.CrossEntropyLoss
         self.classifier = nn.Sequential(
-            nn.Linear(self.num_output_features, num_classes),
+            nn.Linear(in_features=self.num_output_features, 
+                      out_features=num_classes),
+            
+            #nn.Softmax()
         )
+        
+        # Initialize the weights
+        #nn.Module.xavier_uniform_(self.feature_extractor.weight)
+        #nn.Module.xavier_uniform_(self.classifier.weight)
+
 
     def forward(self, x):
         """
@@ -96,6 +98,11 @@ class ExampleModel(nn.Module):
         # TODO: Implement this function (Task  2a)
         batch_size = x.shape[0]
         out = x
+        
+        out = self.feature_extractor(out)
+        out = self.classifier(out)
+        
+        
         expected_shape = (batch_size, self.num_classes)
         assert out.shape == (
             batch_size,
