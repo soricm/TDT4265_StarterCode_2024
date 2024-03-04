@@ -131,7 +131,7 @@ def main():
     create_plots(trainer, "task2")
 
     # test accuracies
-    # trainer.evaluate_on_test()
+    trainer.evaluate_on_test()
 
 
 if __name__ == "__main__":
