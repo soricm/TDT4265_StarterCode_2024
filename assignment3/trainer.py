@@ -201,3 +201,21 @@ class Trainer:
                 f"Could not load best checkpoint. Did not find under: {self.checkpoint_dir}")
             return
         self.model.load_state_dict(state_dict)
+
+    def evaluate_on_test(self):
+        print("Evaluating model on test set")
+        print(f"Loading best model from {self.checkpoint_dir}")
+        self.load_best_model()
+
+        with torch.no_grad():
+            self.model.eval()
+            test_loss, test_accuracy = compute_loss_and_accuracy(
+                self.dataloader_test, self.model, self.loss_criterion
+            )
+
+            used_time = time.time() - self.start_time
+            print(
+                f"Test evaluation completed in {used_time:.2f} seconds",
+                f"Test Loss: {test_loss:.2f}",
+                f"Test Accuracy: {test_accuracy:.3f}",
+                sep=", ")

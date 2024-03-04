@@ -113,8 +113,6 @@ def create_plots(trainer: Trainer, name: str):
     plt.show()
 
 
-
-
 def main():
     # Set the random generator seed (parameters, shuffling etc).
     # You can try to change this and check if you still get the same result!
@@ -131,6 +129,9 @@ def main():
     )
     trainer.train()
     create_plots(trainer, "task2")
+
+    # test accuracies
+    # trainer.evaluate_on_test()
 
 
 if __name__ == "__main__":
