@@ -24,7 +24,17 @@ def load_cifar10(batch_size: int, validation_fraction: float = 0.1
     transform_train = transforms.Compose([
         transforms.ToTensor(),
         transforms.Normalize(mean, std),
+        transforms.RandomRotation(5),
+        transforms.RandomHorizontalFlip(0.5),
+        transforms.RandomVerticalFlip(0.5),
+        transforms.GaussianBlur(3, sigma=(0.1, 2.0))
     ])
+
+    transform_validation = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize(mean, std)
+    ])
+
     transform_test = transforms.Compose([
         transforms.ToTensor(),
         transforms.Normalize(mean, std)
@@ -33,7 +43,13 @@ def load_cifar10(batch_size: int, validation_fraction: float = 0.1
                                   train=True,
                                   download=True,
                                   transform=transform_train)
-
+    # ----------------- ----------------- ----------------- ----------------- #
+    # separate dataset for validation set
+    data_validation = datasets.CIFAR10(get_data_dir(),
+                                     train=True,
+                                     download=True,
+                                     transform=transform_validation)
+    # ----------------- ----------------- ----------------- ----------------- #
     data_test = datasets.CIFAR10(get_data_dir(),
                                  train=False,
                                  download=True,
@@ -54,7 +70,7 @@ def load_cifar10(batch_size: int, validation_fraction: float = 0.1
                                                    num_workers=2,
                                                    drop_last=True)
 
-    dataloader_val = torch.utils.data.DataLoader(data_train,
+    dataloader_val = torch.utils.data.DataLoader(data_validation,
                                                  sampler=validation_sampler,
                                                  batch_size=batch_size,
                                                  num_workers=2)
