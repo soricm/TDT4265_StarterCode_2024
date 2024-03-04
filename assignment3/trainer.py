@@ -203,19 +203,50 @@ class Trainer:
         self.model.load_state_dict(state_dict)
 
     def evaluate_on_test(self):
-        print("Evaluating model on test set")
         print(f"Loading best model from {self.checkpoint_dir}")
         self.load_best_model()
 
         with torch.no_grad():
+            print("Evaluating model on training set")
+            # TRAINING SET
             self.model.eval()
+            train_loss, train_accuracy = compute_loss_and_accuracy(
+                self.dataloader_train, self.model, self.loss_criterion
+            )
+
+            used_time = time.time() - self.start_time
+            print(
+                f"{'-' * 50}"
+                f"Training evaluation completed in {used_time:.2f} seconds",
+                f"Training Loss: {train_loss:.2f}",
+                f"Training Accuracy: {train_accuracy:.3f}\n",
+                sep=", ")
+
+            # VALIDATION SET
+            print("Evaluating model on validation set")
+            validation_loss, validation_accuracy = compute_loss_and_accuracy(
+                self.dataloader_val, self.model, self.loss_criterion
+            )
+
+            used_time = time.time() - self.start_time
+            print(
+                f"{'-' * 50}"
+                f"Validation evaluation completed in {used_time:.2f} seconds",
+                f"Validation Loss: {validation_loss:.2f}",
+                f"Validation Accuracy: {validation_accuracy:.3f}\n",
+                sep=", ")
+
+            # TEST SET
+            print("Evaluating model on training set")
             test_loss, test_accuracy = compute_loss_and_accuracy(
                 self.dataloader_test, self.model, self.loss_criterion
             )
 
             used_time = time.time() - self.start_time
             print(
+                f"{'-' * 50}"
                 f"Test evaluation completed in {used_time:.2f} seconds",
                 f"Test Loss: {test_loss:.2f}",
                 f"Test Accuracy: {test_accuracy:.3f}",
                 sep=", ")
+            print("All evaluations completed.")
