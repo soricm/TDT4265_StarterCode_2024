@@ -17,6 +17,8 @@ class ExampleModel(nn.Module):
         super().__init__()
         # TODO: Implement this function (Task  2a)
         num_filters = 32  # Set number of filters in first conv layer
+        out_sizes = [64, 128]
+
         self.num_classes = num_classes
         # Define the convolutional layers
         self.feature_extractor = nn.Sequential(
@@ -27,28 +29,31 @@ class ExampleModel(nn.Module):
                 stride=1,
                 padding=2,
             ),
+            nn.BatchNorm2d(num_filters),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2, stride=2),
 
             # layer 2
             nn.Conv2d(
                 in_channels=num_filters,
-                out_channels=64,
+                out_channels=out_sizes[0],
                 kernel_size=5,
                 stride=1,
                 padding=2,
             ),
+            nn.BatchNorm2d(out_sizes[0]),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2, stride=2),
 
             # layer 3
             nn.Conv2d(
-                in_channels=64,
-                out_channels=128,
+                in_channels=out_sizes[0],
+                out_channels=out_sizes[1],
                 kernel_size=5,
                 stride=1,
                 padding=2,
             ),
+            nn.BatchNorm2d(out_sizes[1]),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2, stride=2),
             nn.Flatten()
@@ -65,7 +70,9 @@ class ExampleModel(nn.Module):
         # included with nn.CrossEntropyLoss
         self.classifier = nn.Sequential(
             nn.Linear(self.num_output_features, 64),
-            nn.Linear(64, num_classes)
+            nn.BatchNorm1d(64),
+            nn.Linear(64, num_classes),
+            nn.BatchNorm1d(num_classes)
         )
 
         # init weights of classifier
