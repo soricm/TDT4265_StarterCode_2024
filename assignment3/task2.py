@@ -31,11 +31,29 @@ class ExampleModel(nn.Module):
             ),
             nn.BatchNorm2d(num_filters),
             nn.ReLU(),
+            nn.Conv2d(
+                in_channels=num_filters,
+                out_channels=num_filters,
+                kernel_size=3,
+                stride=1,
+                padding=1,
+            ),
+            nn.BatchNorm2d(num_filters),
+            nn.ReLU(),
             nn.MaxPool2d(kernel_size=2, stride=2),
 
             # layer 2
             nn.Conv2d(
                 in_channels=num_filters,
+                out_channels=out_sizes[0],
+                kernel_size=3,
+                stride=1,
+                padding=1,
+            ),
+            nn.BatchNorm2d(out_sizes[0]),
+            nn.ReLU(),
+            nn.Conv2d(
+                in_channels=out_sizes[0],
                 out_channels=out_sizes[0],
                 kernel_size=3,
                 stride=1,
@@ -55,11 +73,29 @@ class ExampleModel(nn.Module):
             ),
             nn.BatchNorm2d(out_sizes[1]),
             nn.ReLU(),
+              nn.Conv2d(
+                in_channels=out_sizes[1],
+                out_channels=out_sizes[1],
+                kernel_size=3,
+                stride=1,
+                padding=1,
+            ),
+            nn.BatchNorm2d(out_sizes[1]),
+            nn.ReLU(),
             nn.MaxPool2d(kernel_size=2, stride=2),
 
             # layer 4
             nn.Conv2d(
                 in_channels=out_sizes[1],
+                out_channels=out_sizes[2],
+                kernel_size=3,
+                stride=1,
+                padding=1,
+            ),
+            nn.BatchNorm2d(out_sizes[2]),
+            nn.ReLU(),
+            nn.Conv2d(
+                in_channels=out_sizes[2],
                 out_channels=out_sizes[2],
                 kernel_size=3,
                 stride=1,
