@@ -1,3 +1,9 @@
+# models 
+assignment3/checkpoints/*
+assignment3/data/*
+
+training_logs*
+
 # pycharm
 .idea
 
