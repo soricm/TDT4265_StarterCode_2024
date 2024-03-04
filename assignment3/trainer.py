@@ -216,9 +216,9 @@ class Trainer:
 
             used_time = time.time() - self.start_time
             print(
-                f"{'-' * 50}\n"
-                f"Training evaluation completed in {used_time:.2f} seconds\n",
-                f"Training Loss: {train_loss:.2f}\n",
+                f"{'-' * 50}"
+                f"Training evaluation completed in {used_time:.2f} seconds",
+                f"Training Loss: {train_loss:.2f}",
                 f"Training Accuracy: {train_accuracy:.3f}\n",
                 sep=", ")
 
@@ -230,9 +230,9 @@ class Trainer:
 
             used_time = time.time() - self.start_time
             print(
-                f"{'-' * 50}\n"
-                f"Validation evaluation completed in {used_time:.2f} seconds\n",
-                f"Validation Loss: {validation_loss:.2f}\n",
+                f"{'-' * 50}"
+                f"Validation evaluation completed in {used_time:.2f} seconds",
+                f"Validation Loss: {validation_loss:.2f}",
                 f"Validation Accuracy: {validation_accuracy:.3f}\n",
                 sep=", ")
 
@@ -244,9 +244,9 @@ class Trainer:
 
             used_time = time.time() - self.start_time
             print(
-                f"{'-' * 50}\n"
-                f"Test evaluation completed in {used_time:.2f} seconds\n",
-                f"Test Loss: {test_loss:.2f}\n",
-                f"Test Accuracy: {test_accuracy:.3f}\n",
+                f"{'-' * 50}"
+                f"Test evaluation completed in {used_time:.2f} seconds",
+                f"Test Loss: {test_loss:.2f}",
+                f"Test Accuracy: {test_accuracy:.3f}",
                 sep=", ")
             print("All evaluations completed.")
