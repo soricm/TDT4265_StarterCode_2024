@@ -210,43 +210,46 @@ class Trainer:
             print("Evaluating model on training set")
             # TRAINING SET
             self.model.eval()
+            start_time = time.time()
             train_loss, train_accuracy = compute_loss_and_accuracy(
                 self.dataloader_train, self.model, self.loss_criterion
             )
 
-            used_time = time.time() - self.start_time
+            used_time = time.time() - start_time
             print(
                 f"{'-' * 50}\n"
-                f"Training evaluation completed in {used_time:.2f} seconds\n",
-                f"Training Loss: {train_loss:.2f}\n",
+                f"Training evaluation completed in {used_time:.2f} seconds\n"
+                f"Training Loss: {train_loss:.2f}\n"
                 f"Training Accuracy: {train_accuracy:.3f}\n",
                 sep=", ")
 
             # VALIDATION SET
             print("Evaluating model on validation set")
+            start_time = time.time()
             validation_loss, validation_accuracy = compute_loss_and_accuracy(
                 self.dataloader_val, self.model, self.loss_criterion
             )
 
-            used_time = time.time() - self.start_time
+            used_time = time.time() - start_time
             print(
                 f"{'-' * 50}\n"
-                f"Validation evaluation completed in {used_time:.2f} seconds\n",
-                f"Validation Loss: {validation_loss:.2f}\n",
+                f"Validation evaluation completed in {used_time:.2f} seconds\n"
+                f"Validation Loss: {validation_loss:.2f}\n"
                 f"Validation Accuracy: {validation_accuracy:.3f}\n",
                 sep=", ")
 
             # TEST SET
             print("Evaluating model on training set")
+            start_time = time.time()
             test_loss, test_accuracy = compute_loss_and_accuracy(
                 self.dataloader_test, self.model, self.loss_criterion
             )
 
-            used_time = time.time() - self.start_time
+            used_time = time.time() - start_time
             print(
                 f"{'-' * 50}\n"
-                f"Test evaluation completed in {used_time:.2f} seconds\n",
-                f"Test Loss: {test_loss:.2f}\n",
+                f"Test evaluation completed in {used_time:.2f} seconds\n"
+                f"Test Loss: {test_loss:.2f}\n"
                 f"Test Accuracy: {test_accuracy:.3f}\n",
                 sep=", ")
             print("All evaluations completed.")
