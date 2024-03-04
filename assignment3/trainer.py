@@ -3,7 +3,7 @@ import typing
 import time
 import collections
 import utils
-import pathlib
+import pathlib 
 
 
 def compute_loss_and_accuracy(
@@ -32,9 +32,10 @@ def compute_loss_and_accuracy(
             output_probs = model(X_batch)
 
             # Compute Loss and Accuracy
-            average_loss = loss_criterion(output_probs, Y_batch)
-            accuracy = np.sum(np.argmax(output_probs, axis=0) == Y_batch,
-                              axis=0)
+            average_loss += loss_criterion(output_probs.data, Y_batch)
+            accuracy += torch.sum(torch.argmax(output_probs,
+                                           dim=1) == Y_batch,
+                              dim=0)
 
             # Predicted class is the max index over the column dimension
     return average_loss, accuracy

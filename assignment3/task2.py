@@ -30,6 +30,7 @@ class ExampleModel(nn.Module):
                 stride=1,
                 padding=2,
             ),
+            nn.BatchNorm2d(num_features=(batch_size, 3, 32, 32))
             nn.ReLU(),
             nn.MaxPool2d(
                 kernel_size=(2,2), 
@@ -62,7 +63,7 @@ class ExampleModel(nn.Module):
                 stride=2, 
                 padding=0,
             ),
-            nn.Flatten(),
+            nn.Flatten(1),
             nn.Linear(
                 in_features=(4**2)*num_filters_3, 
                 out_features=num_hidden_unit, 
@@ -71,7 +72,7 @@ class ExampleModel(nn.Module):
             nn.ReLU(),
         )
         # The output of feature_extractor will be [batch_size, num_filters, 16, 16]
-        self.num_output_features = 32 * 32 * 32
+        self.num_output_features = num_hidden_unit #32 * 32 * 32
         # Initialize our last fully connected layer
         # Inputs all extracted features from the convolutional layers
         # Outputs num_classes predictions, 1 for each class.
@@ -138,7 +139,7 @@ def main():
     # You can try to change this and check if you still get the same result!
     utils.set_seed(0)
     print(f"Using device: {utils.get_device()}")
-    epochs = 10
+    epochs = 1#10
     batch_size = 64
     learning_rate = 5e-2
     early_stop_count = 4

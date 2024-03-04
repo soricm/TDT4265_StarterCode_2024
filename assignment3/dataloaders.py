@@ -22,10 +22,31 @@ def load_cifar10(batch_size: int, validation_fraction: float = 0.1
     # Note that transform train will apply the same transform for
     # validation!
     transform_train = transforms.Compose([
+        # New
+        transforms.Resize((32,32)),
+        #transforms.Resize((31, 31)),
+        transforms.RandomHorizontalFlip(p=0.5),
+        transforms.ColorJitter(brightness=0.5),
+        transforms.RandomRotation(degree=15),
+        transforms.RandomGrayScale(p=0.2),
+        
+        # Old transformations
         transforms.ToTensor(),
         transforms.Normalize(mean, std),
+        
+        
+        
     ])
     transform_test = transforms.Compose([
+        # New
+        transforms.Resize((32,32)),
+        transforms.Resize((31, 31)),
+        transforms.RandomHorizontalFlip(p=0.5),
+        transforms.ColorJitter(brightness=0.5),
+        transforms.RandomRotation(degree=15),
+        transforms.RandomGrayScale(p=0.2),
+        
+        # Old ones
         transforms.ToTensor(),
         transforms.Normalize(mean, std)
     ])
