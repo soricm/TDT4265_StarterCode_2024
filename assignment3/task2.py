@@ -26,18 +26,50 @@ class ExampleModel(nn.Module):
                 kernel_size=5,
                 stride=1,
                 padding=2,
-            )
+            ),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+
+            # layer 2
+            nn.Conv2d(
+                in_channels=num_filters,
+                out_channels=64,
+                kernel_size=5,
+                stride=1,
+                padding=2,
+            ),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+
+            # layer 3
+            nn.Conv2d(
+                in_channels=64,
+                out_channels=128,
+                kernel_size=5,
+                stride=1,
+                padding=2,
+            ),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            nn.Flatten()
         )
+        # init weights of feature extractor
+        nn.init.xavier_normal_(self.feature_extractor[0].weight)
+
         # The output of feature_extractor will be [batch_size, num_filters, 16, 16]
-        self.num_output_features = 32 * 32 * 32
+        self.num_output_features = 4 * 4 * 128
         # Initialize our last fully connected layer
         # Inputs all extracted features from the convolutional layers
         # Outputs num_classes predictions, 1 for each class.
         # There is no need for softmax activation function, as this is
         # included with nn.CrossEntropyLoss
         self.classifier = nn.Sequential(
-            nn.Linear(self.num_output_features, num_classes),
+            nn.Linear(self.num_output_features, 64),
+            nn.Linear(64, num_classes)
         )
+
+        # init weights of classifier
+        nn.init.xavier_normal_(self.classifier[0].weight)
 
     def forward(self, x):
         """
@@ -47,6 +79,11 @@ class ExampleModel(nn.Module):
         """
         # TODO: Implement this function (Task  2a)
         batch_size = x.shape[0]
+
+        # compute the forward pass
+        x = self.feature_extractor(x)
+        x = x.view(-1, self.num_output_features)
+        x = self.classifier(x)
         out = x
         expected_shape = (batch_size, self.num_classes)
         assert out.shape == (

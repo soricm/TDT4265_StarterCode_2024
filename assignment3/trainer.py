@@ -20,9 +20,10 @@ def compute_loss_and_accuracy(
     Returns:
         [average_loss, accuracy]: both scalar.
     """
-    average_loss = 0
-    accuracy = 0
-    # TODO: Implement this function (Task  2a)
+    # DONE Implement this function (Task  2a)
+
+    accum_loss = 0
+    accum_acc = 0
     with torch.no_grad():
         for (X_batch, Y_batch) in dataloader:
             # Transfer images/labels to GPU VRAM, if possible
@@ -32,10 +33,11 @@ def compute_loss_and_accuracy(
             output_probs = model(X_batch)
 
             # Compute Loss and Accuracy
-            average_loss = - 
-            accuracy = 
+            accum_loss += loss_criterion(output_probs, Y_batch).item()
+            accum_acc += (output_probs.argmax(dim=1) == Y_batch).float().mean().item()
 
-            # Predicted class is the max index over the column dimension
+    average_loss = accum_loss / len(dataloader)
+    accuracy = accum_acc / len(dataloader)
     return average_loss, accuracy
 
 
