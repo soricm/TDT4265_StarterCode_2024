@@ -22,11 +22,12 @@ def load_cifar10(batch_size: int, validation_fraction: float = 0.1
     # Note that transform train will apply the same transform for
     # validation!
     transform_train = transforms.Compose([
+        transforms.RandomHorizontalFlip(),
+        transforms.RandomRotation(10),
+        transforms.RandomCrop(32, padding=4),
+        transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2),
         transforms.ToTensor(),
-        transforms.Normalize(mean, std),
-        transforms.RandomRotation(5),
-        transforms.RandomHorizontalFlip(0.1),
-        transforms.RandomVerticalFlip(0.1),
+        transforms.Normalize(mean, std)
     ])
 
     transform_validation = transforms.Compose([
@@ -81,20 +82,6 @@ def load_cifar10(batch_size: int, validation_fraction: float = 0.1
 
     return dataloader_train, dataloader_val, dataloader_test
 
-
-
-    transform_train = transforms.Compose([
-        # New
-        transforms.Resize((32,32)),
-        #transforms.Resize((31, 31)),
-        transforms.RandomHorizontalFlip(p=0.5),
-        transforms.ColorJitter(brightness=0.5),
-        transforms.RandomRotation(degrees=15),
-        transforms.RandomGrayscale(p=0.2),
-        
-        # Old transformations
-        transforms.ToTensor(),
-        transforms.Normalize(mean, std),
         
 ## For task 4
 
@@ -108,7 +95,7 @@ def load_cifar10_ResNes(batch_size: int, validation_fraction: float = 0.1
         transforms.ColorJitter(brightness=0.5),
         transforms.RandomRotation(degrees=15),
         transforms.RandomGrayscale(p=0.2),
-        transforms.GaussianBlur(3, sigma=(0.1, 2.0))
+        transforms.GaussianBlur(3, sigma=(0.1, 2.0)),
         
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.485, 0.456, 0.406],

@@ -17,7 +17,7 @@ class ExampleModel(nn.Module):
         super().__init__()
         # TODO: Implement this function (Task  2a)
         num_filters = 32  # Set number of filters in first conv layer
-        out_sizes = [64, 128]
+        out_sizes = [64, 128, 256]
 
         self.num_classes = num_classes
         # Define the convolutional layers
@@ -56,13 +56,28 @@ class ExampleModel(nn.Module):
             nn.BatchNorm2d(out_sizes[1]),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2, stride=2),
-            nn.Flatten()
+
+            # layer 4
+            nn.Conv2d(
+                in_channels=out_sizes[1],
+                out_channels=out_sizes[2],
+                kernel_size=3,
+                stride=1,
+                padding=1,
+            ),
+            nn.BatchNorm2d(out_sizes[2]),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            nn.Flatten(),
         )
         # init weights of feature extractor
-        nn.init.xavier_normal_(self.feature_extractor[0].weight)
+
+        for i in range(len(self.feature_extractor)):
+            if isinstance(self.feature_extractor[i], nn.Conv2d):
+                nn.init.kaiming_normal_(self.feature_extractor[i].weight)
 
         # The output of feature_extractor will be [batch_size, num_filters, 16, 16]
-        self.num_output_features = 4 * 4 * 128
+        self.num_output_features = 2 * 2 * out_sizes[2]
         # Initialize our last fully connected layer
         # Inputs all extracted features from the convolutional layers
         # Outputs num_classes predictions, 1 for each class.
@@ -76,7 +91,9 @@ class ExampleModel(nn.Module):
         )
 
         # init weights of classifier
-        nn.init.xavier_normal_(self.classifier[0].weight)
+        for i in range(len(self.classifier)):
+            if isinstance(self.classifier[i], nn.Linear):
+                nn.init.kaiming_normal_(self.classifier[i].weight)
 
     def forward(self, x):
         """
