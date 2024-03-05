@@ -82,7 +82,18 @@ def load_cifar10(batch_size: int, validation_fraction: float = 0.1
 
     return dataloader_train, dataloader_val, dataloader_test
 
-        
+       
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 ## For task 4
 
 def load_cifar10_ResNes(batch_size: int, validation_fraction: float = 0.1

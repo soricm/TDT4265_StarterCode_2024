@@ -58,8 +58,8 @@ def main():
     utils.set_seed(0)
     print(f"Using device: {utils.get_device()}")
     epochs = 10
-    batch_size = 64
-    learning_rate = 5e-2
+    batch_size = 64 # 32
+    learning_rate = 5e-4
     early_stop_count = 4
     dataloaders = load_cifar10_ResNes(batch_size)
     model = Model()
@@ -67,7 +67,10 @@ def main():
         batch_size, learning_rate, early_stop_count, epochs, model, dataloaders
     )
     trainer.train()
-    create_plots(trainer, "task2")
+    create_plots(trainer, "task4")
+    
+     # test accuracies
+    trainer.evaluate_on_test()
 
 
 if __name__ == "__main__":
