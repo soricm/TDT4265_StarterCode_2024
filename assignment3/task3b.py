@@ -1,10 +1,11 @@
 import pathlib
 import matplotlib.pyplot as plt
 import utils
+import torch
 from torch import nn
 from dataloaders import load_cifar10
 from trainer import Trainer
-import ExampleModel
+from task2 import ExampleModel
 
 
 
@@ -55,10 +56,10 @@ def main():
     model2 = ExampleModel(image_channels=3, num_classes=10)
     
     trainer1 = Trainer(
-        batch_size, learning_rate, early_stop_count, epochs1, model1, dataloaders
+        batch_size, learning_rate, early_stop_count, epochs, model1, dataloaders
     )
     trainer2 = Trainer(
-        batch_size, learning_rate, early_stop_count, epochs1, model2, dataloaders
+        batch_size, learning_rate, early_stop_count, epochs, model2, dataloaders
     )
     
     trainer1.optimizer = torch.optim.SGD(trainer1.model.parameters(), trainer1.learning_rate)
