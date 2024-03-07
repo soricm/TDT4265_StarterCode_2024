@@ -56,14 +56,12 @@ def main():
     model2 = ExampleModel(image_channels=3, num_classes=10)
     
     trainer1 = Trainer(
-        batch_size, learning_rate, early_stop_count, epochs, model1, dataloaders
+        batch_size, learning_rate, early_stop_count, epochs, model1, dataloaders, False
     )
     trainer2 = Trainer(
-        batch_size, learning_rate, early_stop_count, epochs, model2, dataloaders
+        batch_size, learning_rate, early_stop_count, epochs, model2, dataloaders, True
     )
     
-    trainer1.optimizer = torch.optim.SGD(trainer1.model.parameters(), trainer1.learning_rate)
-    trainer2.optimizer = torch.optim.Adagrad(trainer2.model.parameters(), lr=trainer2.learning_rate, weight_decay=1e-5)
     
     trainer1.train()
     trainer2.train()

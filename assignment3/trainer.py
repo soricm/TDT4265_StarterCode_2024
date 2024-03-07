@@ -49,7 +49,8 @@ class Trainer:
                  early_stop_count: int,
                  epochs: int,
                  model: torch.nn.Module,
-                 dataloaders: typing.List[torch.utils.data.DataLoader]):
+                 dataloaders: typing.List[torch.utils.data.DataLoader],
+                 best_optimizer=True, bool):
         """
             Initialize our trainer class.
         """
@@ -57,6 +58,7 @@ class Trainer:
         self.learning_rate = learning_rate
         self.early_stop_count = early_stop_count
         self.epochs = epochs
+        self.best_optimizer = best_optimizer
 
         # Since we are doing multi-class classification, we use CrossEntropyLoss
         self.loss_criterion = torch.nn.CrossEntropyLoss()
@@ -66,10 +68,14 @@ class Trainer:
         self.model = utils.to_cuda(self.model)
         print(self.model)
 
-        # Define our optimizer. SGD = Stochastich Gradient Descent
-        # self.optimizer = torch.optim.SGD(self.model.parameters(), self.learning_rate)
-        self.optimizer = torch.optim.Adagrad(self.model.parameters(), lr=self.learning_rate, weight_decay=1e-5)
-
+        # Define our optimizer. 
+        if self.best_optimizer: 
+            # the best one is Adagrad
+            self.optimizer = torch.optim.Adagrad(self.model.parameters(), lr=self.learning_rate, weight_decay=1e-5)
+        else: 
+            # the other solution is SGD = Stochastich Gradient Descent
+            self.optimizer = torch.optim.SGD(self.model.parameters(), self.learning_rate)
+        
         # Load our dataset
         self.dataloader_train, self.dataloader_val, self.dataloader_test = dataloaders
 
