@@ -50,7 +50,7 @@ class Trainer:
                  epochs: int,
                  model: torch.nn.Module,
                  dataloaders: typing.List[torch.utils.data.DataLoader],
-                 best_optimizer=True, bool):
+                 best_optimizer: bool = True ):
         """
             Initialize our trainer class.
         """
@@ -71,9 +71,11 @@ class Trainer:
         # Define our optimizer. 
         if self.best_optimizer: 
             # the best one is Adagrad
+            print("Training with Adagrad!")
             self.optimizer = torch.optim.Adagrad(self.model.parameters(), lr=self.learning_rate, weight_decay=1e-5)
         else: 
             # the other solution is SGD = Stochastich Gradient Descent
+            print("Training with SGD!")
             self.optimizer = torch.optim.SGD(self.model.parameters(), self.learning_rate)
         
         # Load our dataset

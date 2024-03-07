@@ -64,14 +64,13 @@ def main():
     
     
     trainer1.train()
+    trainer1.evaluate_on_test()
+
     trainer2.train()
-    
+    trainer2.evaluate_on_test()
 
     create_plots(trainer1, trainer2, "task3b") 
     
-    # test accuracies
-    trainer1.evaluate_on_test()
-    trainer2.evaluate_on_test()
 
 if __name__ == "__main__":
     main()
