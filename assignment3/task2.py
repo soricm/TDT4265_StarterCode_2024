@@ -188,7 +188,7 @@ def main():
         batch_size, learning_rate, early_stop_count, epochs, model, dataloaders
     )
     trainer.train()
-    create_plots(trainer, "task2") # "task3_Adagrad", "task3_SGD"
+    create_plots(trainer, "task2") 
 
     # test accuracies
     trainer.evaluate_on_test()
