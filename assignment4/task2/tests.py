@@ -130,6 +130,8 @@ def test_calculate_individual_image_result():
     ans1 = 2
     ans2 = 2
     ans3 = 2
+    ######
+    print(get_all_box_matches(b1, b2, 0.5))
     res = calculate_individual_image_result(b1, b2, 0.5)
 
     assert res["true_pos"] == ans1, "Expected {}, got: {}".format(
