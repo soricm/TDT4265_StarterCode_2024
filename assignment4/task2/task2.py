@@ -18,9 +18,37 @@ def calculate_iou(prediction_box, gt_box):
     # YOUR CODE HERE
 
     # Compute intersection
+    iou = 0
+
+    # looking at x-axis
+    if prediction_box[2] < gt_box[2]:
+        # gt_box is at the right
+        # if the difference is negative, this means that there is no intersection
+        intersection_x = max(0, gt_box[0] - prediction_box[2])
+    else:
+        # prediction_box is at the right
+        intersection_x = max(0, prediction_box[0] - gt_box[2])
+
+    # looking at y-axis
+    if prediction_box[3] < gt_box[3]:
+        # gt_box is above 
+        # if the difference is negative, this means that there is no intersection
+        intersection_y = max(0, gt_box[1] - prediction_box[3])
+    else:
+        # prediction_box is above 
+        intersection_y = max(0, prediction_box[1] - gt_box[3])
+
+    intersection = intersection_x * intersection_y
 
     # Compute union
-    iou = 0
+    area_prediction = (prediction_box[3]-prediction_box[1])*(prediction_box[2]-prediction_box[0])
+    area_gt = (gt_box[3]-gt_box[1])*(gt_box[2]-gt_box[0])
+
+    union = area_prediction + area_gt - intersection
+
+    # compute IoU
+    iou = intersection / union
+
     assert iou >= 0 and iou <= 1
     return iou
 
