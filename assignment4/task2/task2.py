@@ -144,7 +144,7 @@ def get_all_box_matches(prediction_boxes, gt_boxes, iou_threshold):
             del matches[n]
             break
 
-    return np.array([prediction_boxes_match]), np.array([gt_boxes_match])
+    return np.array(prediction_boxes_match), np.array(gt_boxes_match)
 
 
 def calculate_individual_image_result(prediction_boxes, gt_boxes, iou_threshold):
@@ -273,7 +273,10 @@ def calculate_mean_average_precision(precisions, recalls):
     recall_levels = np.linspace(0, 1.0, 11)
     # YOUR CODE HERE
     average_precision = 0
-    return average_precision
+    for recall in recall_levels:
+        average_precision += np.max(precisions[recalls >= recall])
+
+    return average_precision/len(precisions)
 
 
 def mean_average_precision(ground_truth_boxes, predicted_boxes):
