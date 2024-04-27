@@ -26,7 +26,7 @@ parser.add_argument(
 )
 
 args = vars(parser.parse_args())
-# args = {'input': '.\\..\\dataset\\RBK_TDT17\\1_train-val_1min_aalesund_from_start\\img1\\000003.jpg', 'threshold': 0.5, 'model': 'v2'}
+# args = {'input': '.\\..\\datasets\\RBK_TDT17\\1_train-val_1min_aalesund_from_start\\img1\\000003.jpg', 'threshold': 0.5, 'model': 'v2'}
 print("Arguments: ", args)
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')

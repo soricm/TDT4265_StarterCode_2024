@@ -37,13 +37,13 @@ def mot_to_yolov8(input_file, output_dir):
         height = bb_height / 1080  # Normalizing by image height
 
         # Write YOLOv5 format to output file 
-        output_file = os.path.join(output_dir, f'labels/{int(frame_id):06d}.txt')
+        output_file = os.path.join(output_dir, f'labels_{int(frame_id):06d}.txt')
         with open(output_file, 'a') as f_out:
             f_out.write(f"{class_id} {x_center} {y_center} {width} {height}\n")
 
 
 if __name__ == "__main__":
-    root_dir = "./true_dataset"  # Change this to the desired root directory
+    root_dir = "./datasets/true_dataset"  # Change this to the desired root directory
     create_directories(root_dir)
 
     mot_to_yolov8("datasets/1_train-val_1min_aalesund_from_start/gt/gt.txt",
