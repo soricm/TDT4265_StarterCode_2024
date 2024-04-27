@@ -1,0 +1,7 @@
+train: true_datasets/images/train
+val: true_datasets/images/val
+test: true_datasets/images/test
+nc: 2
+names:
+  0: ball
+  1: player
