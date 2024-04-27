@@ -1,4 +1,7 @@
-# models 
+# project data
+project/dataset
+
+# models
 assignment3/checkpoints/*
 assignment3/data/*
 
